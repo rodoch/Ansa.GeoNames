@@ -37,6 +37,8 @@ dotnet build -r win10-x64
 
 This will produce an .exe file and an appsettings.json file that you can grab from `<PATH-TO-YOUR-APP>/bin/Debug/netcoreapp2.0/`.
 
+Or else, you can just run the application from within Visual Studio.
+
 ## Configuration
 
 Use the **appsettings.json** file to configure your target database:
@@ -66,7 +68,7 @@ Things to note:
 - You will not need to retrieve the GeoNames raw data dumps yourself. The application will do this for you. You need to specify the DataSourcePath in order to decide where these files will be stored.
 - Some GeoNames raw text files range from 0.5-1.5GB unzipped, depending on the configuration you choose. Ensure you have adequate disk space.
 - Probably the biggest factor in download size, processing speed, and the size of the subsequent database is the number of alternate languages you specify.
-- The next biggest facot is the minimum population settings. Higher minima mean smaller file sizes.
+- The next biggest factor is the minimum population setting. Higher minima mean smaller file sizes.
 
 Unsurprisingly, the SQL Server implementation writes data to the DB significantly faster. If creating a Sqlite database you might want to make yourself a cup of tea.
 
@@ -111,4 +113,4 @@ Remember to:
 
 ### Permissions
 
-Please note that the database user specified in your SQL Server connection string must have ALTER permission on the database you are writing to. This is required so that IDENTITY_INSERT can be turned on for the duration of the data input process as we are inserting premade IDs in to the PK/Identity columns of the GeoNames and AlternateNames tables.
+Please note that the database user specified in your SQL Server connection string must have `ALTER` permission on the database you are writing to. This is required so that `IDENTITY_INSERT` can be turned on for the duration of the data input process as we are inserting premade IDs in to the PK/Identity columns of the GeoNames and AlternateNames tables.
