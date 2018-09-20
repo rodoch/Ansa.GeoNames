@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using Ansa.Extensions;
 using NGeoNames;
 
 namespace Ansa.GeoNames.SqlServer
@@ -16,16 +17,16 @@ namespace Ansa.GeoNames.SqlServer
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
-            var countriesPath = Path.Combine(dataPath, @"countryInfo.txt");
+            var countriesPath = Path.Combine(dataPath, @"allCountries.txt");
 
             if (!File.Exists(countriesPath))
             {
                 Console.WriteLine("Downloading countries data...");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
-                downloader.DownloadFile("countryInfo.txt", dataPath);
+                downloader.DownloadFile("allCountries.zip", dataPath);
             }
 
-            var results = GeoFileReader.ReadCountryInfo(countriesPath).OrderBy(p => p.GeoNameId);
+            var results = GeoFileReader.ReadExtendedGeoNames(countriesPath).OrderBy(p => p.Id);
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -33,32 +34,42 @@ namespace Ansa.GeoNames.SqlServer
 
                 Console.WriteLine("Populating countries...");
 
-                const string sql = @"INSERT INTO CountryInfo VALUES (@ISO_Alpha2, @ISO_Alpha3, @ISO_Numeric, @FIPS, @Country, 
-                    @Capital, @Area, @Population, @Continent, @Tld, @CurrencyCode, @CurrencyName, @Phone, @PostalCodeFormat, 
-                    @PostalCodeRegex, @GeoNameId, @EquivalentFipsCode)";
+                var allowIdentityInsert = connection.CreateCommand();
+                allowIdentityInsert.CommandText = @"SET IDENTITY_INSERT GeoNames ON";
+
+                try
+                {
+                    allowIdentityInsert.ExecuteNonQuery();
+                }
+                catch (SqlException exception)
+                {
+                    Console.WriteLine("SQL Exception occurred. Error Code: " + exception.ErrorCode);
+
+                }
+
+                const string sql = @"INSERT INTO GeoNames (ID, Name, NameASCII, Latitude, Longitude, FeatureClass, FeatureCode, CountryCode, 
+                        Population, Elevation, Dem, Timezone, ModificationDate) 
+                    VALUES (@ID, @Name, @NameASCII, @Latitude, @Longitude, @FeatureClass, @FeatureCode, @CountryCode, @Population, @Elevation,
+                        @Dem, @Timezone, @ModificationDate)";
 
                 var command = connection.CreateCommand();
                 command.CommandText = sql;
 
                 string[] parameterNames = new[]
                 {
-                    "@ISO_Alpha2",
-                    "@ISO_Alpha3",
-                    "@ISO_Numeric",
-                    "@FIPS",
-                    "@Country",
-                    "@Capital",
-                    "@Area",
+                    "@ID",
+                    "@Name",
+                    "@NameASCII",
+                    "@Latitude",
+                    "@Longitude",
+                    "@FeatureClass",
+                    "@FeatureCode",
+                    "@CountryCode",
                     "@Population",
-                    "@Continent",
-                    "@Tld",
-                    "@CurrencyCode",
-                    "@CurrencyName",
-                    "@Phone",
-                    "@PostalCodeFormat",
-                    "@PostalCodeRegex",
-                    "@GeoNameId",
-                    "@EquivalentFipsCode"
+                    "@Elevation",
+                    "@Dem",
+                    "@Timezone",
+                    "@ModificationDate"
                 };
 
                 DbParameter[] parameters = parameterNames.Select(pn =>
@@ -72,27 +83,36 @@ namespace Ansa.GeoNames.SqlServer
 
                 foreach (var r in results)
                 {
-                    parameters[0].Value = r.ISO_Alpha2;
-                    parameters[1].Value = r.ISO_Alpha3;
-                    parameters[2].Value = r.ISO_Numeric;
-                    parameters[3].Value = r.FIPS;
-                    parameters[4].Value = r.Country;
-                    parameters[5].Value = r.Capital;
-                    parameters[6].Value = r.Area;
-                    parameters[7].Value = r.Population;
-                    parameters[8].Value = r.Continent;
-                    parameters[9].Value = r.Tld;
-                    parameters[10].Value = r.CurrencyCode;
-                    parameters[11].Value = r.CurrencyName;
-                    parameters[12].Value = r.Phone;
-                    parameters[13].Value = r.PostalCodeFormat;
-                    parameters[14].Value = r.PostalCodeRegex;
-                    parameters[15].Value = r.GeoNameId;
-                    parameters[16].Value = r.EquivalentFipsCode;
-
-                    Console.WriteLine("Country: " + r.Country);
+                    parameters[0].Value = r.Id;
+                    parameters[1].Value = r.Name.HasValueOrDBNull();
+                    parameters[2].Value = r.NameASCII.HasValueOrDBNull();
+                    parameters[3].Value = r.Latitude;
+                    parameters[4].Value = r.Longitude;
+                    parameters[5].Value = r.FeatureClass.HasValueOrDBNull();
+                    parameters[6].Value = r.FeatureCode.HasValueOrDBNull();
+                    parameters[7].Value = r.CountryCode.HasValueOrDBNull();
+                    parameters[8].Value = r.Population;
+                    parameters[9].Value = r.Elevation.HasValueOrDBNull();
+                    parameters[10].Value = r.Dem;
+                    parameters[11].Value = r.Timezone.HasValueOrDBNull();
+                    parameters[12].Value = r.ModificationDate;
 
                     command.ExecuteNonQuery();
+
+                    Console.WriteLine("GeoName ID: " + r.Id);
+                }
+
+                var disallowIdentityInsert = connection.CreateCommand();
+                disallowIdentityInsert.CommandText = @"SET IDENTITY_INSERT GeoNames OFF";
+
+                try
+                {
+                    disallowIdentityInsert.ExecuteNonQuery();
+                }
+                catch (SqlException exception)
+                {
+                    Console.WriteLine("SQL Exception occurred. Error Code: " + exception.ErrorCode);
+
                 }
 
                 Console.WriteLine();
