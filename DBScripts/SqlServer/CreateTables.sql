@@ -7,8 +7,8 @@ BEGIN
 		[ID] [int] IDENTITY(1,1) NOT NULL,
 		[Name] [nvarchar](200) NULL,
 		[NameASCII] [nvarchar](200) NULL,
-		[Latitude] [nvarchar](100) NULL,
-		[Longitude] [nvarchar](max) NULL,
+		[Latitude] [float] NULL,
+		[Longitude] [float] NULL,
 		[FeatureClass] [nchar](1) NULL,
 		[FeatureCode] [nvarchar](10) NULL,
 		[CountryCode] [nvarchar](2) NULL,
@@ -19,7 +19,7 @@ BEGIN
 		[ModificationDate] [datetime] NULL,
 	 CONSTRAINT [PK_GeoNames] PRIMARY KEY CLUSTERED ([ID] ASC)
 	 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-	) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+	) ON [PRIMARY]
 END
 
 IF NOT EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE [TABLE_SCHEMA] = 'dbo' AND [TABLE_NAME] = 'CountryInfo')
