@@ -9,7 +9,7 @@ using NGeoNames;
 
 namespace Ansa.GeoNames.SqlServer
 {
-    public static class PopulateCountries
+    public static class PopulateAllCountries
     {
         public static void Populate(IConfiguration configuration)
         {

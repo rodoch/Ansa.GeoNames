@@ -13,7 +13,7 @@ namespace Ansa.GeoNames.SqlServer
             // This is so that IDENTITY_INSERT can be temporarily turned on.
             // This is necessary so that IDs can be inserted into the PK/Identity columns of the GeoNames and AlternateNames tables.
 
-            PopulateCountries.Populate(configuration);
+            //PopulateAllCountries.Populate(configuration);
             PopulateCountryInfo.Populate(configuration);
             PopulateGeoNames.Populate(configuration);
             PopulateAlternateNames.Populate(configuration);

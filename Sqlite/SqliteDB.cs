@@ -10,7 +10,7 @@ namespace Ansa.GeoNames.Sqlite
             Console.WriteLine("Creating Sqlite database...");
 
             CreateTables.Create(configuration);
-            PopulateCountries.Populate(configuration);
+            //PopulateAllCountries.Populate(configuration);
             PopulateCountryInfo.Populate(configuration);
             PopulateGeoNames.Populate(configuration);
             PopulateAlternateNames.Populate(configuration);
