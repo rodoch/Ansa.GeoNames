@@ -13,11 +13,12 @@ namespace Ansa.GeoNames.Sqlite
     {
         public static void Populate(IConfiguration configuration)
         {
-            Console.WriteLine("Getting ready to populate GeoNames...");
+            Console.WriteLine("Getting ready to populate GeoNames…");
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
             var minimumPopulation = configuration["GeoNames:CitiesMinimumPopulation"];
+            var includeCountriesData = configuration["GeoNames:IncludeCountriesData"];
 
             string citiesFileName;
 
@@ -41,18 +42,37 @@ namespace Ansa.GeoNames.Sqlite
 
             if (!File.Exists(citiesPath))
             {
-                Console.WriteLine("Downloading GeoNames data...");
+                Console.WriteLine("Downloading specified GeoNames data…");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
                 downloader.DownloadFile(citiesFileName + ".zip", dataPath);
             }
 
-            var results = GeoFileReader.ReadExtendedGeoNames(citiesPath).OrderBy(p => p.Id);
+            var results = GeoFileReader.ReadExtendedGeoNames(citiesPath).ToList();
+
+            if (includeCountriesData == "true")
+            {
+                var countriesPath = Path.Combine(dataPath, @"allCountries.txt");
+
+                if (!File.Exists(countriesPath))
+                {
+                    Console.WriteLine("Downloading GeoNames data for all countries…");
+                    var downloader = GeoFileDownloader.CreateGeoFileDownloader();
+                    downloader.DownloadFile("allCountries.zip", dataPath);
+                }
+
+                var countriesNames = GeoFileReader.ReadExtendedGeoNames(countriesPath)
+                    .Where(p => p.FeatureCode == "PCLI" || p.FeatureCode == "ADM1");
+                
+                results.AddRange(countriesNames);
+            }
+
+            results.OrderBy(p => p.Id);
 
             using (var connection = new SqliteConnection(connectionString))
             {
                 connection.Open();
 
-                Console.WriteLine("Populating GeoNames...");
+                Console.WriteLine("Populating GeoNames…");
 
                 const string sql = @"INSERT INTO GeoNames (ID, Name, NameASCII, Latitude, Longitude, FeatureClass, FeatureCode, CountryCode, 
                         Population, Elevation, Dem, Timezone, ModificationDate) 

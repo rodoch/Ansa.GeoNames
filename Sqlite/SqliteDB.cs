@@ -7,7 +7,7 @@ namespace Ansa.GeoNames.Sqlite
     {
         public static void CreateDB(IConfiguration configuration)
         {
-            Console.WriteLine("Creating Sqlite database...");
+            Console.WriteLine("Creating Sqlite database…");
 
             CreateTables.Create(configuration);
             //PopulateAllCountries.Populate(configuration);

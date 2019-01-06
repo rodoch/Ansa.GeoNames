@@ -13,7 +13,7 @@ namespace Ansa.GeoNames.Sqlite
     {
         public static void Populate(IConfiguration configuration)
         {
-            Console.WriteLine("Getting ready to populate alternate names...");
+            Console.WriteLine("Getting ready to populate alternate names…");
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
@@ -23,7 +23,7 @@ namespace Ansa.GeoNames.Sqlite
 
             if (!File.Exists(alternatesPath))
             {
-                Console.WriteLine("Downloading alternate names data...");
+                Console.WriteLine("Downloading alternate names data…");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
                 downloader.DownloadFile("alternateNamesV2.zip", dataPath);
             }
@@ -34,7 +34,7 @@ namespace Ansa.GeoNames.Sqlite
             {
                 connection.Open();
 
-                Console.WriteLine("Populating alternate names...");
+                Console.WriteLine("Populating alternate names…");
 
                 const string sql = @"INSERT INTO AlternateNames VALUES (@ID, @GeoNameId, @ISOLanguage, 
                     @AlternateName, @IsPreferredName, @IsShortName, @IsColloquial, @IsHistoric, @FromDate, @ToDate)";
@@ -67,7 +67,7 @@ namespace Ansa.GeoNames.Sqlite
 
                 foreach (var r in results)
                 {
-                    if (targetLanguages.Count() > 0 && !targetLanguages.Contains(r.ISOLanguage))
+                    if (targetLanguages.Length > 0 && !targetLanguages.Contains(r.ISOLanguage))
                     {
                         continue;
                     }

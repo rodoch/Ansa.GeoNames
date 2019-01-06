@@ -32,7 +32,7 @@ namespace Ansa.GeoNames
 
             var database = Configuration["Database"].ToLowerInvariant();
 
-            Console.WriteLine("Configured. Starting application...");
+            Console.WriteLine("Configured. Starting application…");
             Console.WriteLine("Ready to create database. Press any key to begin.");
             Console.ReadLine();
 

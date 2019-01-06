@@ -7,7 +7,7 @@ namespace Ansa.GeoNames.SqlServer
     {
         public static void CreateDB(IConfiguration configuration)
         {
-            Console.WriteLine("Creating SQL Server database...");
+            Console.WriteLine("Creating SQL Server database…");
 
             // NOTE: the DB user must have ALTER permission on the database you are writing to.
             // This is so that IDENTITY_INSERT can be temporarily turned on.

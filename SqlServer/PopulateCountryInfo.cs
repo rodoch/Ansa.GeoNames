@@ -12,7 +12,7 @@ namespace Ansa.GeoNames.SqlServer
     {
         public static void Populate(IConfiguration configuration)
         {
-            Console.WriteLine("Getting ready to populate country info...");
+            Console.WriteLine("Getting ready to populate country info…");
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
@@ -20,7 +20,7 @@ namespace Ansa.GeoNames.SqlServer
 
             if (!File.Exists(countriesPath))
             {
-                Console.WriteLine("Downloading country info...");
+                Console.WriteLine("Downloading country info…");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
                 downloader.DownloadFile("countryInfo.txt", dataPath);
             }
@@ -31,7 +31,7 @@ namespace Ansa.GeoNames.SqlServer
             {
                 connection.Open();
 
-                Console.WriteLine("Populating country info...");
+                Console.WriteLine("Populating country info…");
 
                 const string sql = @"INSERT INTO CountryInfo VALUES (@ISO_Alpha2, @ISO_Alpha3, @ISO_Numeric, @FIPS, @Country, 
                     @Capital, @Area, @Population, @Continent, @Tld, @CurrencyCode, @CurrencyName, @Phone, @PostalCodeFormat, 

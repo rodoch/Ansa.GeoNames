@@ -4,18 +4,13 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Ansa.Extensions" Version="0.1.0-alpha" />
+    <PackageReference Include="Ansa.Extensions" Version="0.2.0-alpha" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
-    <!--<PackageReference Include="NGeoNames" Version="1.5.0" />-->
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="NGeoNames">
-      <HintPath>..\NGeoNames\NGeoNames\bin\Debug\netstandard2.0\NGeoNames.dll</HintPath>
-    </Reference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="NGeoNames" Version="1.5.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

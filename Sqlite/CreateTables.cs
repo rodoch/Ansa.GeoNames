@@ -8,7 +8,7 @@ namespace Ansa.GeoNames.Sqlite
     {
         public static void Create(IConfiguration configuration)
         {
-            Console.WriteLine("Creating tables...");
+            Console.WriteLine("Creating tables…");
 
             var connectionString = configuration["ConnectionString"];
 
@@ -16,22 +16,31 @@ namespace Ansa.GeoNames.Sqlite
             {
                 connection.Open();
 
-                var geonames = connection.CreateCommand();
-                geonames.CommandText = TablesSql.Geonames;
+                var geoNames = connection.CreateCommand();
+                geoNames.CommandText = TablesSql.GeoNames;
+                var geoNamesIndex = connection.CreateCommand();
+                geoNamesIndex.CommandText = TablesSql.GeoNamesIndex;
 
-                var countries = connection.CreateCommand();
-                countries.CommandText = TablesSql.Countries;
+                var countryInfo = connection.CreateCommand();
+                countryInfo.CommandText = TablesSql.CountryInfo;
+                var countryInfoIndex = connection.CreateCommand();
+                countryInfoIndex.CommandText = TablesSql.CountryInfoIndex;
 
                 var alternateNames = connection.CreateCommand();
                 alternateNames.CommandText = TablesSql.AlternateNames;
+                var alternateNamesIndex = connection.CreateCommand();
+                alternateNamesIndex.CommandText = TablesSql.AlternateNamesIndex;
 
-                geonames.ExecuteNonQuery();
-                Console.WriteLine("Created Geonames table");
+                geoNames.ExecuteNonQuery();
+                geoNamesIndex.ExecuteNonQuery();
+                Console.WriteLine("Created GeoNames table");
 
-                countries.ExecuteNonQuery();
+                countryInfo.ExecuteNonQuery();
+                countryInfoIndex.ExecuteNonQuery();
                 Console.WriteLine("Created CountryInfo table");
 
                 alternateNames.ExecuteNonQuery();
+                alternateNamesIndex.ExecuteNonQuery();
                 Console.WriteLine("Created AlternateNames table");
 
                 Console.WriteLine();

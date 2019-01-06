@@ -13,7 +13,7 @@ namespace Ansa.GeoNames.SqlServer
     {
         public static void Populate(IConfiguration configuration)
         {
-            Console.WriteLine("Getting ready to populate alternate names...");
+            Console.WriteLine("Getting ready to populate alternate names…");
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
@@ -23,7 +23,7 @@ namespace Ansa.GeoNames.SqlServer
 
             if (!File.Exists(alternatesPath))
             {
-                Console.WriteLine("Downloading alternate names data...");
+                Console.WriteLine("Downloading alternate names data…");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
                 downloader.DownloadFile("alternateNamesV2.zip", dataPath);
             }
@@ -34,14 +34,14 @@ namespace Ansa.GeoNames.SqlServer
             {
                 connection.Open();
 
-                Console.WriteLine("Populating alternate names...");
+                Console.WriteLine("Populating alternate names…");
 
-                var allowIdentityInsert = connection.CreateCommand();
-                allowIdentityInsert.CommandText = @"SET IDENTITY_INSERT AlternateNames ON";
+                var enableIdentityInserts = connection.CreateCommand();
+                enableIdentityInserts.CommandText = @"SET IDENTITY_INSERT AlternateNames ON";
 
                 try
                 {
-                    allowIdentityInsert.ExecuteNonQuery();
+                    enableIdentityInserts.ExecuteNonQuery();
                 }
                 catch (SqlException exception)
                 {
@@ -82,7 +82,7 @@ namespace Ansa.GeoNames.SqlServer
 
                 foreach (var r in results)
                 {
-                    if (targetLanguages.Count() > 0 && !targetLanguages.Contains(r.ISOLanguage))
+                    if (targetLanguages.Length > 0 && !targetLanguages.Contains(r.ISOLanguage))
                     {
                         continue;
                     }
@@ -103,12 +103,12 @@ namespace Ansa.GeoNames.SqlServer
                     Console.WriteLine("Alternate Name ID: " + r.Id);
                 }
 
-                var disallowIdentityInsert = connection.CreateCommand();
-                disallowIdentityInsert.CommandText = @"SET IDENTITY_INSERT AlternateNames OFF";
+                var disableIdentityInserts = connection.CreateCommand();
+                disableIdentityInserts.CommandText = @"SET IDENTITY_INSERT AlternateNames OFF";
 
                 try
                 {
-                    disallowIdentityInsert.ExecuteNonQuery();
+                    disableIdentityInserts.ExecuteNonQuery();
                 }
                 catch (SqlException exception)
                 {

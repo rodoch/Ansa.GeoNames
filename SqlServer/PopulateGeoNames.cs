@@ -13,7 +13,7 @@ namespace Ansa.GeoNames.SqlServer
     {
         public static void Populate(IConfiguration configuration)
         {
-            Console.WriteLine("Getting ready to populate GeoNames...");
+            Console.WriteLine("Getting ready to populate GeoNames…");
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
@@ -41,7 +41,7 @@ namespace Ansa.GeoNames.SqlServer
 
             if (!File.Exists(citiesPath))
             {
-                Console.WriteLine("Downloading GeoNames data...");
+                Console.WriteLine("Downloading specified GeoNames data…");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
                 downloader.DownloadFile(citiesFileName + ".zip", dataPath);
             }
@@ -52,7 +52,7 @@ namespace Ansa.GeoNames.SqlServer
             {
                 connection.Open();
 
-                Console.WriteLine("Populating GeoNames...");
+                Console.WriteLine("Populating GeoNames…");
 
                 var allowIdentityInsert = connection.CreateCommand();
                 allowIdentityInsert.CommandText = @"SET IDENTITY_INSERT GeoNames ON";

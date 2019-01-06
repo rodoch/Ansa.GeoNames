@@ -12,7 +12,7 @@ namespace Ansa.GeoNames.Sqlite
     {
         public static void Populate(IConfiguration configuration)
         {
-            Console.WriteLine("Getting ready to populate country info...");
+            Console.WriteLine("Getting ready to populate country info…");
 
             var connectionString = configuration["ConnectionString"];
             var dataPath = configuration["DataSourcePath"];
@@ -20,7 +20,7 @@ namespace Ansa.GeoNames.Sqlite
 
             if (!File.Exists(countriesPath))
             {
-                Console.WriteLine("Downloading country info data...");
+                Console.WriteLine("Downloading country info data…");
                 var downloader = GeoFileDownloader.CreateGeoFileDownloader();
                 downloader.DownloadFile("countryInfo.txt", dataPath);
             }
@@ -31,7 +31,7 @@ namespace Ansa.GeoNames.Sqlite
             {
                 connection.Open();
 
-                Console.WriteLine("Populating country info...");
+                Console.WriteLine("Populating country info…");
 
                 const string sql = @"INSERT INTO CountryInfo VALUES (@ISO_Alpha2, @ISO_Alpha3, @ISO_Numeric, @FIPS, @Country, 
                     @Capital, @Area, @Population, @Continent, @Tld, @CurrencyCode, @CurrencyName, @Phone, @PostalCodeFormat, 
