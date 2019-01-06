@@ -21,11 +21,9 @@ The database schema mirrors the GeoNames Gazetteer data structure described [her
 
 First, clone the repository to your local machine:
 
-```
+```cmd
 git clone https://github.com/rodoch/Ansa.GeoNames
 ```
-
-**Note:** This application has a dependency on the NGeoNames library (see above). The release-version NGeoNames package does not yet support the GeoNames AlternateNamesV2 schema, however. I have opened a PR [here](https://github.com/RobThree/NGeoNames/pull/7) to add V2 support. When this PR is accepted, or a better solution is implemented, I will reference the mainstream package in the Ansa.GeoNames project. In the meantime, you will need to clone my fork of NGeoNames [(here)](https://github.com/rodoch/NGeoNames) and include the project reference within Ansa.GeoName.csproj.
 
 Then, build the ASP.NET solution, specifying your target runtime environment, e.g.:
 
